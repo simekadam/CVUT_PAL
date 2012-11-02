@@ -273,9 +273,9 @@ class CondensedGraph {
 	private void DFS(Component c, Edge incoming, double price, double minprice, double maxprice, boolean alice, boolean bob)
 	{
 		
-		if(c.bestMax >= price + maxprice) bob = false;
+		if(c.bestMax > price + maxprice) bob = false;
 		else c.bestMax = price+maxprice;
-		if(c.bestMin <= price + minprice) alice = false;
+		if(c.bestMin < price + minprice) alice = false;
 		else c.bestMin = price+minprice;
 		if(alice || bob ){
 		
@@ -305,8 +305,8 @@ class CondensedGraph {
 			{
 				nextPrice+=e.cost+c.cost;
 			}
-			if(System.currentTimeMillis() - timeout < 10*1000) DFS(nextComponent, e,nextPrice, minprice, nextMaxPrice, alice, bob);
-			else return;
+			 DFS(nextComponent, e,nextPrice, minprice, nextMaxPrice, alice, bob);
+			
 			}
 //			if(minprice>nextMin) minprice = nextMin;
 //			if(maxprice<nextMax) maxprice = nextMax;
