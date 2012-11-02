@@ -64,8 +64,8 @@ class Component {
 		this.root = true;
 		this.leaf = false;
 		this.visited = false;
-		this.bestMax = Double.MAX_VALUE;
-		this.bestMin = 0;
+		this.bestMax = 0;
+		this.bestMin = Double.MAX_VALUE;
 	}
 }
 
@@ -236,27 +236,28 @@ class CondensedGraph {
 		double price = 0;
 		for(Component c : components)
 		{
-			
+			boolean alice = true, bob = true;
 			if(c.root)
 			{
 				
 				
 				
 				c.visited = true;
-				
+				if(c.leaf)
+				{
+					alicesPrice = 0;
+					alice = false;
+					if(c.cost > bobsPrice) bobsPrice = c.cost;
+				}
 				for(Edge e : c.edges)
 				{
 					double minprice = e.cost;
 					double maxprice = e.cost+c.cost;
 					
-					DFS(components.get(graph.get(e.nodeB).component),e, price, minprice, maxprice);
+					DFS(components.get(graph.get(e.nodeB).component),e, price, minprice, maxprice, alice, bob);
 				}
 				
-				if(c.leaf)
-				{
-					alicesPrice = 0;
-					if(c.cost > bobsPrice) bobsPrice = c.cost;
-				}
+				
 			}
 			
 			
@@ -269,10 +270,15 @@ class CondensedGraph {
 		
 	}
 	
-	private void DFS(Component c, Edge incoming, double price, double minprice, double maxprice)
+	private void DFS(Component c, Edge incoming, double price, double minprice, double maxprice, boolean alice, boolean bob)
 	{
 		
-		c.visited = true;
+		if(c.bestMax >= price + maxprice) bob = false;
+		else c.bestMax = price+maxprice;
+		if(c.bestMin <= price + minprice) alice = false;
+		else c.bestMin = price+minprice;
+		if(alice || bob ){
+		
 		
 		
 		double nextPrice;
@@ -299,11 +305,12 @@ class CondensedGraph {
 			{
 				nextPrice+=e.cost+c.cost;
 			}
-			if(System.currentTimeMillis() - timeout < 10*1000) DFS(nextComponent, e,nextPrice, minprice, nextMaxPrice);
+			if(System.currentTimeMillis() - timeout < 10*1000) DFS(nextComponent, e,nextPrice, minprice, nextMaxPrice, alice, bob);
 			else return;
 			}
 //			if(minprice>nextMin) minprice = nextMin;
 //			if(maxprice<nextMax) maxprice = nextMax;
+		}
 		}
 		
 		
