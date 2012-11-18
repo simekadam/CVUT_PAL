@@ -225,12 +225,12 @@ class CondensedGraph {
 			if(c.edges.size() == 0) c.leaf = true;
 //			if(c.root) System.out.println(c.leaf);
 			c.cost = cost;
+			System.out.println(cost);
 		}
 		
 	}
 
 	public void bobsRoute() {
-		timeout = System.currentTimeMillis();
 		bobsPrice = 0;
 		alicesPrice = Double.MAX_VALUE;
 		double price = 0;
@@ -242,7 +242,6 @@ class CondensedGraph {
 				
 				
 				
-				c.visited = true;
 				if(c.leaf)
 				{
 					alicesPrice = 0;
